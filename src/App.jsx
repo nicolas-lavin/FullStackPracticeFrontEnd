@@ -1,5 +1,6 @@
-import { ThemeProvider, Typography } from '@mui/material';
+import { Container, ThemeProvider } from '@mui/material';
 import Navbar from './components/Navbar.jsx';
+import StickyFooter from './components/StickyFooter.jsx';
 import themeMain from './config/themeMain';
 
 function App() {
@@ -7,7 +8,8 @@ function App() {
     <div>
       <ThemeProvider theme={themeMain}>
         <Navbar></Navbar>
-        <Typography>HOLA</Typography>
+        <Container maxWidth="sm">Hoal</Container>
+        <StickyFooter></StickyFooter>
       </ThemeProvider>
     </div>
     
