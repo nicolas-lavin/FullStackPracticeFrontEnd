@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Card, CardActions, CardContent, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Container, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Send } from '@mui/icons-material';
+import { grey } from '@mui/material/colors';
 
 export default function CreatePerson() {
 
@@ -11,37 +12,52 @@ export default function CreatePerson() {
     };
 
     return (
-        <Card sx={{ m:3, width: 1500, maxHeight: 870, justifyContent:'center'}}>
-            <CardContent>
-                <FormControl fullWidth>
-                    <TextField id="rut_persona" label="Rut" variant="standard"/>
+        <Box
+            component="form"
+            sx={{
+                '& .MuiTextField-root': { m: 1, width: '25ch' },
+            }}
+            noValidate
+            autoComplete="off"
+        >
+            <form>
+                <Container maxWidth="sm" sx={{bgcolor: grey[300]}}>
+                    <Grid container>
+                        <Grid item xs={12} md={12}>
+                            <TextField id="rut_persona" label="Rut" variant="standard" sx={{ width: '100%' }}/>
+                        </Grid>
 
-                    <TextField id="nombre_persona" label="Nombre" variant="standard" sx={{mt:1}}/>
-
-                    <TextField id="correo_persona" label="Correo" variant="standard" sx={{mt:1}} />
-
-                    <TextField id="telefono_persona" label="Teléfono" variant="standard" sx={{mt:1}}/> 
-                </FormControl>
-                <FormControl sx={{ minWidth: 370, mt:2}}>
-                    <InputLabel id="tipo_persona_label">Tipo Persona</InputLabel>
-                    <Select
-                        labelId="tipo_persona_label"
-                        id="tipo_persona"
-                        value={age}
-                        onChange={handleChange}
-                        autoWidth
-                        label="Tipo Persona"
-                    >
-                        <MenuItem value=""><em>None</em></MenuItem>
-                        <MenuItem value={10}>Twenty</MenuItem>
-                        <MenuItem value={21}>Twenty one</MenuItem>
-                        <MenuItem value={22}>Twenty one and a half</MenuItem>
-                    </Select>
-                </FormControl>
-            </CardContent>
-            <CardActions sx={{ justifyContent: 'right'}}>
-                <Button variant="contained" size="large" endIcon={<Send />}>Enviar</Button>
-            </CardActions>
-        </Card>
+                        <Grid item xs={12} md={12}>
+                            <TextField id="nombre_persona" label="Nombre" variant="standard" sx={{ width: '100%' }}/>
+                        </Grid>
+                        <Grid item xs={12} md={8}>
+                            <TextField id="correo_persona" label="Correo" variant="standard" sx={{ width: '100%' }}/>
+                        </Grid>  
+                        <Grid item xs={12} md={8}> 
+                            <TextField id="telefono_persona" label="Teléfono" variant="standard" sx={{ width: '100%' }}/> 
+                        </Grid> 
+                        <Grid item xs={12}>
+                            <Select
+                                labelId="tipo_persona_label"
+                                id="tipo_persona"
+                                value={age}
+                                onChange={handleChange}
+                                autoWidth
+                                label="Tipo Persona"
+                                sx={{ width: '100%' }}
+                            >
+                                <MenuItem value=""><em>None</em></MenuItem>
+                                <MenuItem value={10}>Twenty</MenuItem>
+                                <MenuItem value={21}>Twenty one</MenuItem>
+                                <MenuItem value={22}>Twenty one and a half</MenuItem>
+                            </Select>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Button variant="contained" size="large" endIcon={<Send />}>Enviar</Button>
+                        </Grid>
+                    </Grid>
+                </Container>
+            </form>
+        </Box>            
     )
 }
