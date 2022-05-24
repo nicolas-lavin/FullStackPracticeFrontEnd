@@ -5,7 +5,12 @@ import { grey } from '@mui/material/colors';
 import NavbarLogo from '../assets/images/logo_duoc.png';
 import { Link } from 'react-router-dom';
 
-const pages = [{name: 'Personas', to: '/personas'}, {name: 'Pricing', to:'/precios'}, {name: 'Blog', to:'/blog'}];
+const pages = [
+    {name: 'Inicio', to: '/'}, 
+    {name: 'Ingreso Registro', to:'/registration/create'}, 
+    {name: 'Registros', to:'/registrations'},
+    {name: 'Administrar Personas', to:'/people'}
+];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function Navbar() {

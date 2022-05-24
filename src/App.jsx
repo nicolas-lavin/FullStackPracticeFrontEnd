@@ -4,6 +4,7 @@ import StickyFooter from './components/StickyFooter.jsx';
 import themeMain from './config/themeMain';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import CreatePerson from './components/Person/CreatePerson.jsx';
+import ListPeople from './components/Person/ListPeople.jsx';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
         <Box>
             <Navbar></Navbar>
             <Routes>
-              <Route exact path="/personas" element={<CreatePerson/>} />
+              <Route exact path="/people" element={<ListPeople/>} />
+              <Route exact path="/people/create" element={<CreatePerson/>} />
             </Routes>
             <StickyFooter></StickyFooter>
         </Box>
