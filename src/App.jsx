@@ -1,4 +1,4 @@
-import { Box, ThemeProvider} from '@mui/material';
+import {Container, CssBaseline, ThemeProvider} from '@mui/material';
 import Navbar from './components/Navbar.jsx';
 import StickyFooter from './components/StickyFooter.jsx';
 import themeMain from './config/themeMain';
@@ -9,15 +9,16 @@ import ListPeople from './components/Person/ListPeople.jsx';
 function App() {
   return (
     <ThemeProvider theme={themeMain}>
+      <CssBaseline />
       <Router>
-        <Box>
-            <Navbar></Navbar>
+          <Navbar/>
+          <Container>
             <Routes>
               <Route exact path="/people" element={<ListPeople/>} />
               <Route exact path="/people/create" element={<CreatePerson/>} />
             </Routes>
-            <StickyFooter></StickyFooter>
-        </Box>
+          </Container>
+          <StickyFooter></StickyFooter>
       </Router>
     </ThemeProvider>
   );

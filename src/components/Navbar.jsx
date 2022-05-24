@@ -33,7 +33,7 @@ export default function Navbar() {
     };
 
     return (
-        <AppBar position="static" sx={{ bgcolor: grey[900]}}>
+        <AppBar position="sticky" sx={{ bgcolor: grey[900]}}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
@@ -93,7 +93,7 @@ export default function Navbar() {
                         to={page.to}
                         key={page.name}
                         onClick={handleCloseNavMenu}
-                        sx={{ my: 2, color: 'white', display: 'block' }}
+                        sx={{ my: 2, color: 'white', display: 'block', textTransform: 'none' }}
                     >
                         {page.name}
                     </Button>
