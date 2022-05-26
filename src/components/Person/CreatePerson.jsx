@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Box, Button, Container, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { Send } from '@mui/icons-material';
 import { grey, lightBlue } from '@mui/material/colors';
 import axios from 'axios';
 
 export default function CreatePerson() {
-    const [typePerson, setTypePerson] = useState('');
 
     const [typesPeople, setTypesPeople] = useState([]);
+    const [formData, setFormData] = useState({});
 
     const handleChange = (event) => {
-        setTypePerson(event.target.value);
+        setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
     useEffect(() => {
@@ -22,15 +22,26 @@ export default function CreatePerson() {
         setTypesPeople(res.data);
     }
 
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        await axios.post(process.env.REACT_APP_URI_BACKEND+'/person',formData)
+        .then((response) =>{
+            alert(response.data.message);
+        }).catch((error) =>{
+            alert(error.response.data.message);
+        });
+    }
+
     return (
         <Box
             component="form"
             sx={{
-                '& .MuiTextField-root': { my:1, width: '100%' }, 
+                '& .MuiTextField-root': { my:1, width: '100%' },
                 pt:2,
             }}
             noValidate
             autoComplete="off"
+            onSubmit={handleSubmit}
         >
             <Container maxWidth="sm" sx={{bgcolor: grey[200]}}>
                 <Grid container>
@@ -41,36 +52,36 @@ export default function CreatePerson() {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <TextField id="rut_persona" label="Rut" variant="standard"/>
+                        <TextField name="rut" label="Rut" variant="standard" onChange={handleChange}/>
                     </Grid>
 
                     <Grid item xs={12}>
-                        <TextField id="nombre_persona" label="Nombre" variant="standard"/>
+                        <TextField name="name" label="Nombre" variant="standard" onChange={handleChange}/>
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField id="correo_persona" label="Correo" variant="standard"/>
+                        <TextField name="email" label="Correo" variant="standard" onChange={handleChange}/>
                     </Grid>  
                     <Grid item xs={12}> 
-                        <TextField id="telefono_persona" label="Teléfono" variant="standard"/> 
+                        <TextField name="phone" label="Teléfono" variant="standard" onChange={handleChange}/> 
                     </Grid> 
                     <Grid item xs={12} pt={1}>
-                        <Select
-                            labelId="tipo_persona_label"
-                            id="tipo_persona"
-                            value={typePerson}
-                            onChange={handleChange}
-                            autoWidth
-                            label="Tipo Persona"
-                            sx={{ width: '100%' }}
-                        >
-                            <MenuItem value=""><em>Seleccione un tipo</em></MenuItem>
-                            {typesPeople.map(type => (
-                                <MenuItem key={type.id} value={type.id}>{type.description}</MenuItem>
-                            ))}
-                        </Select>
+                        <FormControl sx={{ m: 1, width: '100%' }}>
+                            <InputLabel id="tipo_persona_label">Tipo de persona</InputLabel>
+                            <Select
+                                labelId="tipo_persona_label"
+                                name="type_person_id"
+                                value={formData.type_person_id || ''}
+                                onChange={handleChange}
+                            >
+                                <MenuItem value=""><em>Seleccione un tipo</em></MenuItem>
+                                {typesPeople.map(type => (
+                                    <MenuItem key={type.id} value={type.id}>{type.description}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid container item xs={12} py={2} alignItems="flex-end" justifyContent="flex-end">
-                        <Button variant="contained" size="large" endIcon={<Send />}>Enviar</Button>
+                        <Button type="submit" variant="contained" size="large" endIcon={<Send />}>Enviar</Button>
                     </Grid>
                 </Grid>
             </Container>
