@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { grey } from '@mui/material/colors';
 import Moment from 'react-moment';
 import 'moment-timezone';
+
 export default function ListRegistrations() {
 
     const [registrations, setRegistrations] = useState([]);

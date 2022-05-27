@@ -52,7 +52,7 @@ export default function ListPeople() {
                                     <TableCell>
                                         <Grid container>
                                             <Grid item xs={12} sm={12} md={6}>
-                                                <Button variant="contained" size="sm" color="warning"><Edit/></Button>
+                                                <Button component={Link} to={`/people/edit/${person.id}`} variant="contained" size="sm" color="warning"><Edit/></Button>
                                             </Grid>
                                             <Grid item xs={12} sm={12} md={6}>
                                                 <Button variant="contained" size="sm" color="error"><Delete/></Button>

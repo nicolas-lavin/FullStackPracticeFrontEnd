@@ -1,31 +1,20 @@
 import {Container, CssBaseline, ThemeProvider} from '@mui/material';
-import Navbar from './components/Navbar.jsx';
-import StickyFooter from './components/StickyFooter.jsx';
 import themeMain from './config/themeMain';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import CreatePerson from './components/Person/CreatePerson.jsx';
-import ListPeople from './components/Person/ListPeople.jsx';
-import ListRegistrations from './components/Registration/ListRegistrations.jsx';
-import CreateRegistration from './components/Registration/CreateRegistration.jsx';
-import NotFound from './components/Errors/404.jsx';
+import SignIn from './components/Auth/SignIn.jsx';
+import MainLayoutRoutes from './components/Layout/MainLayoutRoutes';
 
 function App() {
   return (
     <ThemeProvider theme={themeMain}>
       <CssBaseline />
       <Router>
-          <Navbar/>
-          <Container>
+          <Container maxWidth={false} disableGutters={true}>
             <Routes>
-              <Route path='*' element={<NotFound />} />
-              <Route exact path="/" />
-              <Route exact path="/registration/create" element={<CreateRegistration/>}/>
-              <Route exact path="/people" element={<ListPeople/>} />
-              <Route exact path="/people/create" element={<CreatePerson/>} />
-              <Route exact path="/registrations" element={<ListRegistrations/>} />
+              <Route exact path="/login/sign-in" element={<SignIn/>} />
+              <Route path="*" element={<MainLayoutRoutes />} />
             </Routes>
           </Container>
-          <StickyFooter></StickyFooter>
       </Router>
     </ThemeProvider>
   );

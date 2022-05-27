@@ -2,8 +2,8 @@ import React from 'react';
 import {AppBar,Box,Toolbar,IconButton,Typography,Menu,Container,Avatar,Button,Tooltip,MenuItem} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { grey } from '@mui/material/colors';
-import NavbarLogo from '../assets/images/logo_duoc.png';
-import { Link } from 'react-router-dom';
+import NavbarLogo from '../../../assets/images/logo_duoc.png';
+import { Link, NavLink } from 'react-router-dom';
 
 const pages = [
     {name: 'Inicio', to: '/'}, 
@@ -89,11 +89,11 @@ export default function Navbar() {
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     {pages.map((page) => (
                     <Button
-                        component={Link}
+                        component={NavLink}
                         to={page.to}
                         key={page.name}
                         onClick={handleCloseNavMenu}
-                        sx={{ my: 2, color: 'white', display: 'block', textTransform: 'none' }}
+                        sx={{ my: 2, color: 'white', display: 'block', textTransform: 'none'}}
                     >
                         {page.name}
                     </Button>
