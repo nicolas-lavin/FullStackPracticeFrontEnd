@@ -5,7 +5,8 @@ import { grey, lightBlue } from '@mui/material/colors';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
+import formPersonValidations from './validations/FormPerson';
+import {formatterRut} from '../../libs/chileanRutValidations';
 
 export default function EditPerson() {
 
@@ -26,11 +27,11 @@ export default function EditPerson() {
     const getPerson = async (id) => {
         const { data } = await axios.get(process.env.REACT_APP_URI_BACKEND + '/person/' + id);
         setInitValues({
-            'rut': data.data.rut,
-            'name': data.data.name,
-            'email': data.data.email,
-            'phone': data.data.phone,
-            'type_person_id': data.data.type_person_id,
+            rut: data.data.rut,
+            name: data.data.name,
+            email: data.data.email,
+            phone: data.data.phone,
+            type_person_id: data.data.type_person_id,
         });
     }
 
@@ -38,24 +39,18 @@ export default function EditPerson() {
         <>
             <Formik
                 initialValues={initValues}
-                validationSchema={Yup.object({
-                    rut: Yup.string().required("El rut es requerido"),
-                    name: Yup.string().required("El nombre es requerido"),
-                    email: Yup.string().email("El email debe ser valido").required("El correo electronico es requerido"),
-                    phone: Yup.number().typeError("Debe ingresar solo numeros").min(9,"Debe ingresar un numero valido de 9 digitos").required("El numero de teléfono es requerido"),
-                    type_person_id: Yup.string().required("Debe seleccionar el tipo de persona"),
-                })}
-                onSubmit={() => {
-                    console.log('formulario enviado!');
-                    /* await axios.put(process.env.REACT_APP_URI_BACKEND+'/person/'+id,formData)
+                validationSchema={formPersonValidations}
+                onSubmit={async (formData) => {
+                    await axios.put(process.env.REACT_APP_URI_BACKEND+'/person/'+id,formData)
                     .then((response) =>{
                         alert(response.data.message);
                     }).catch((error) =>{
                         alert(error.response.data.message);
-                    }); */
+                    });
                 }}
+                enableReinitialize={true}
             >
-                {({ values, errors, handleBlur, handleChange, handleSubmit, touched }) => (
+                {({ values, errors, handleBlur, handleChange, handleSubmit, touched, setFieldValue}) => (
                     <Box
                         component="form"
                         sx={{ '& .MuiTextField-root': { my: 1, width: '100%' }, pt: 2 }}
@@ -63,7 +58,6 @@ export default function EditPerson() {
                         autoComplete="off"
                         onSubmit={handleSubmit}
                     >
-                        {console.log(initValues.rut)}
                         <Container maxWidth="sm" sx={{ bgcolor: grey[200] }}>
                             <Grid container>
                                 <Grid container item xs={12} pt={2} alignItems="center" justifyContent="center">
@@ -73,17 +67,17 @@ export default function EditPerson() {
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <TextField name="rut" label="Rut" variant="standard" value={values.rut} onChange={handleChange} onBlur={handleBlur} error={touched.rut && Boolean(errors.rut)} helperText={touched.rut && errors.rut} />
+                                    <TextField name="rut" label="Rut" variant="standard" value={values.rut || ''} onChange={(e) => {handleChange(e); setFieldValue('rut', formatterRut(e.target.value));}} onBlur={handleBlur} error={touched.rut && Boolean(errors.rut)} helperText={touched.rut && errors.rut} />
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <TextField name="name" label="Nombre" variant="standard" value={values.name} onChange={handleChange} onBlur={handleBlur} error={touched.name && Boolean(errors.name)} helperText={touched.name && errors.name} />
+                                    <TextField name="name" label="Nombre" variant="standard" value={values.name || ''} onChange={handleChange} onBlur={handleBlur} error={touched.name && Boolean(errors.name)} helperText={touched.name && errors.name} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <TextField name="email" label="Correo" variant="standard" value={values.email} onChange={handleChange} onBlur={handleBlur} error={touched.email && Boolean(errors.email)} helperText={touched.email && errors.email} />
+                                    <TextField name="email" label="Correo" variant="standard" value={values.email || ''} onChange={handleChange} onBlur={handleBlur} error={touched.email && Boolean(errors.email)} helperText={touched.email && errors.email} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <TextField name="phone" label="Teléfono" variant="standard" value={values.phone} onChange={handleChange} onBlur={handleBlur} error={touched.phone && Boolean(errors.phone)} helperText={touched.phone && errors.phone} />
+                                    <TextField name="phone" label="Teléfono" variant="standard" value={values.phone || ''} onChange={handleChange} onBlur={handleBlur} error={touched.phone && Boolean(errors.phone)} helperText={touched.phone && errors.phone} />
                                 </Grid>
                                 <Grid item xs={12} pt={2}>
                                     <FormControl fullWidth>
@@ -92,7 +86,7 @@ export default function EditPerson() {
                                             labelId="tipo_persona_label"
                                             name="type_person_id"
                                             defaultValue=""
-                                            value={values.type_person_id}
+                                            value={values.type_person_id || ''}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             error={touched.type_person_id && Boolean(errors.type_person_id)} 
