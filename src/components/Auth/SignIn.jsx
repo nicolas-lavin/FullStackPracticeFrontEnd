@@ -1,17 +1,13 @@
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import {
+  Checkbox, Link, Paper, Box, Grid, Typography, 
+  FormControlLabel, TextField, CssBaseline, Button, Avatar
+} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BackgroundLogin from '../../assets/images/background_login.jpg';
+import { useFormik } from 'formik';
+import signInValidations from './validations/SignIn';
+import axios from 'axios';
 
 function Copyright(props) {
   return (
@@ -29,16 +25,23 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    
-  };
+  
+  const formik = useFormik({
+    initialValues: {
+      userName: '',
+      password: ''
+    },
+    validationSchema: signInValidations,
+    onSubmit: async (formData) => {
+      try {
+        const response = await axios.post(process.env.REACT_APP_URI_BACKEND+'/auth/signin', formData);
+        console.log(response);
+        //alert(response.data.message);
+      } catch (error) {
+        alert(error.response.data.message);
+      }
+    }
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -72,15 +75,20 @@ export default function SignInSide() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">Iniciar Sesión</Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Correo"
-                name="email"
-                autoComplete="email"
+                id="userName"
+                label="Usuario"
+                name="userName"
+                autoComplete="userName"
+                value={formik.values.userName || ''}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.userName && Boolean(formik.errors.userName)} 
+                helperText={formik.touched.userName && formik.errors.userName}
                 autoFocus
               />
               <TextField
@@ -92,6 +100,11 @@ export default function SignInSide() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={formik.values.password || ''}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.password && Boolean(formik.errors.password)} 
+                helperText={formik.touched.password && formik.errors.password}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
