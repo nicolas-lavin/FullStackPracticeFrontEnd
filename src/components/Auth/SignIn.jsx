@@ -1,6 +1,6 @@
 import {
   Checkbox, Link, Paper, Box, Grid, Typography, 
-  FormControlLabel, TextField, CssBaseline, Button, Avatar
+  FormControlLabel, TextField, CssBaseline, Button, Avatar, CircularProgress
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -8,6 +8,8 @@ import BackgroundLogin from '../../assets/images/background_login.jpg';
 import { useFormik } from 'formik';
 import signInValidations from './validations/SignIn';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import {loginPending, loginSuccess, loginFail} from '../../redux/slices/loginSlice';
 
 function Copyright(props) {
   return (
@@ -25,6 +27,9 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
+
+  const dispatch = useDispatch();
+  const { isLoading, isAuth, error } = useSelector(state => state.login);
   
   const formik = useFormik({
     initialValues: {
@@ -33,12 +38,13 @@ export default function SignInSide() {
     },
     validationSchema: signInValidations,
     onSubmit: async (formData) => {
+      dispatch(loginPending());
       try {
-        const response = await axios.post(process.env.REACT_APP_URI_BACKEND+'/auth/signin', formData);
-        console.log(response);
+        //const response = await axios.post(process.env.REACT_APP_URI_BACKEND+'/auth/signin', formData);
+        //console.log(response);
         //alert(response.data.message);
       } catch (error) {
-        alert(error.response.data.message);
+        dispatch(loginFail(error.response.data.message));
       }
     }
   });
@@ -116,7 +122,7 @@ export default function SignInSide() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Iniciar Sesión
+                {isLoading ? <CircularProgress color="inherit"/> : "Iniciar Sesión"}
               </Button>
               <Grid container>
                 <Grid item xs>
