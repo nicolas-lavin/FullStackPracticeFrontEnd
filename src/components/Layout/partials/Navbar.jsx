@@ -1,9 +1,10 @@
-import React from 'react';
+import { useState }from 'react';
 import {AppBar,Box,Toolbar,IconButton,Typography,Menu,Container,Avatar,Button,Tooltip,MenuItem} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { grey } from '@mui/material/colors';
 import NavbarLogo from '../../../assets/images/logo_duoc.png';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink,useNavigate } from 'react-router-dom';
+import { userLogout } from '../../../services/authService';
 
 const pages = [
     {name: 'Inicio', to: '/'}, 
@@ -11,11 +12,11 @@ const pages = [
     {name: 'Registros', to:'/registrations'},
     {name: 'Administrar Personas', to:'/people'}
 ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function Navbar() {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
+    const navigate = useNavigate();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -31,6 +32,15 @@ export default function Navbar() {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
+    const handleLogout = async () => {
+        try {
+            await userLogout();
+            navigate("/login/sign-in");
+        } catch (error) {
+            alert(error);
+        }
+    }
 
     return (
         <AppBar position="sticky" sx={{ bgcolor: grey[900]}}>
@@ -122,11 +132,9 @@ export default function Navbar() {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                     >
-                    {settings.map((setting) => (
-                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                            <Typography textAlign="center">{setting}</Typography>
+                        <MenuItem key="Logout" onClick={handleLogout}>
+                            <Typography textAlign="center">Cerrar Sesión</Typography>
                         </MenuItem>
-                    ))}
                     </Menu>
                 </Box>
                 </Toolbar>

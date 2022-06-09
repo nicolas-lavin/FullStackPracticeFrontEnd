@@ -1,34 +1,21 @@
-import {
-  Checkbox, Link, Paper, Box, Grid, Typography, 
-  FormControlLabel, TextField, CssBaseline, Button, Avatar, CircularProgress
-} from '@mui/material';
+import { Checkbox, Link, Paper, Box, Grid, Typography, FormControlLabel, TextField, CssBaseline, Button, Avatar, CircularProgress, Alert } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BackgroundLogin from '../../assets/images/background_login.jpg';
 import { useFormik } from 'formik';
-import signInValidations from './validations/SignIn';
-import axios from 'axios';
+import loginValidations from './validations/Login';
 import { useDispatch, useSelector } from 'react-redux';
 import {loginPending, loginSuccess, loginFail} from '../../redux/slices/loginSlice';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://www.duoc.cl/" target="_blank">
-        Duoc UC
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { NavLink, useNavigate } from 'react-router-dom';
+import { userLogin } from '../../services/authService.js'
+import { getUserProfile } from '../../redux/actions/userAction';
 
 const theme = createTheme();
 
-export default function SignInSide() {
+export default function Login() {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isLoading, isAuth, error } = useSelector(state => state.login);
   
   const formik = useFormik({
@@ -36,13 +23,16 @@ export default function SignInSide() {
       userName: '',
       password: ''
     },
-    validationSchema: signInValidations,
+    validationSchema: loginValidations,
     onSubmit: async (formData) => {
       dispatch(loginPending());
       try {
-        //const response = await axios.post(process.env.REACT_APP_URI_BACKEND+'/auth/signin', formData);
-        //console.log(response);
-        //alert(response.data.message);
+        const data = await userLogin(formData);
+        if (data){
+          dispatch(loginSuccess());
+          dispatch(getUserProfile());
+          navigate('/');
+        } 
       } catch (error) {
         dispatch(loginFail(error.response.data.message));
       }
@@ -116,6 +106,7 @@ export default function SignInSide() {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Recuerdame"
               />
+              {error && <Alert severity="error">{error}</Alert>}
               <Button
                 type="submit"
                 fullWidth
@@ -127,11 +118,15 @@ export default function SignInSide() {
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
-                    ¿Olvido su contraseña?
+                    ¿Olvidó su contraseña?
+                  </Link>
+                </Grid>
+                <Grid item xs>
+                  <Link component={NavLink} to="/login/sign-up" variant="body2">
+                    {"¿No tienes una cuenta? Registrate"}
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
         </Grid>

@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-const signInValidations = () => {
+const loginValidations = () => {
 
     return Yup.object({
         userName: Yup.string().required("El nombre de usuario es requerido"),
@@ -8,4 +8,4 @@ const signInValidations = () => {
     });
 }
 
-export default signInValidations;
+export default loginValidations;
