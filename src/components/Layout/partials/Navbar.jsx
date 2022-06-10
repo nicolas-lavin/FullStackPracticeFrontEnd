@@ -7,7 +7,7 @@ import { Link, NavLink,useNavigate } from 'react-router-dom';
 import { userLogout } from '../../../services/authService';
 
 const pages = [
-    {name: 'Inicio', to: '/'}, 
+    {name: 'Inicio', to: '/dashboard'}, 
     {name: 'Ingreso Registro', to:'/registration/create'}, 
     {name: 'Registros', to:'/registrations'},
     {name: 'Administrar Personas', to:'/people'}
@@ -33,13 +33,11 @@ export default function Navbar() {
         setAnchorElUser(null);
     };
 
-    const handleLogout = async () => {
-        try {
-            await userLogout();
-            navigate("/login/sign-in");
-        } catch (error) {
-            alert(error);
-        }
+    const handleLogout = () => {
+        sessionStorage.removeItem("accessJWT");
+        localStorage.removeItem("systemSite");
+        userLogout();
+        navigate("/login/sign-in");
     }
 
     return (

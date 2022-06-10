@@ -7,8 +7,9 @@ import CreatePerson from '../Person/CreatePerson.jsx';
 import ListPeople from '../Person/ListPeople.jsx';
 import ListRegistrations from '../Registration/ListRegistrations.jsx';
 import CreateRegistration from '../Registration/CreateRegistration.jsx';
-import Home from '../Home.jsx';
+import Dashboard from '../Dashboard.jsx';
 import EditPerson from '../Person/EditPerson.jsx';
+import { PrivateRoute } from '../private-route/PrivateRoute.jsx';
 
 export default function MainLayoutRoutes() {
     return (
@@ -17,7 +18,10 @@ export default function MainLayoutRoutes() {
                 <Navbar />
             </nav>
                 <Routes>
-                    <Route index element={<Home />} />
+                    <Route element={<PrivateRoute />}>
+                        <Route exact path="/dashboard" element={<Dashboard />} />
+                    </Route>
+                    
                     <Route exact path="/registration/create" element={<CreateRegistration/>}/>
                     <Route exact path="/people" element={<ListPeople/>} />
                     <Route exact path="/people/create" element={<CreatePerson/>} />

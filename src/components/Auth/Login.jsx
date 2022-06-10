@@ -9,6 +9,7 @@ import {loginPending, loginSuccess, loginFail} from '../../redux/slices/loginSli
 import { NavLink, useNavigate } from 'react-router-dom';
 import { userLogin } from '../../services/authService.js'
 import { getUserProfile } from '../../redux/actions/userAction';
+import { useEffect } from 'react';
 
 const theme = createTheme();
 
@@ -16,8 +17,13 @@ export default function Login() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { isLoading, isAuth, error } = useSelector(state => state.login);
   
+  useEffect(() => {
+     sessionStorage.getItem("accessJWT") && navigate("/dashboard")
+  },[isAuth, navigate])
+
   const formik = useFormik({
     initialValues: {
       userName: '',
@@ -31,7 +37,7 @@ export default function Login() {
         if (data){
           dispatch(loginSuccess());
           dispatch(getUserProfile());
-          navigate('/');
+          navigate('/dashboard');
         } 
       } catch (error) {
         dispatch(loginFail(error.response.data.message));

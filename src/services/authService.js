@@ -36,6 +36,28 @@ export const userData = () => {
     })
 }
 
+export const getNewAccessJWT = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { refreshJWT } = JSON.parse(localStorage.getItem("systemSite"));
+            if(!refreshJWT) reject("Token no encontrado!");
+            const res = await axios.post(AUTH_URL+'/refreshToken',{},{
+                headers: { 'x-auth-token': refreshJWT }
+            });
+            if(res.data) {
+                sessionStorage.setItem("accessJWT",res.data.accessToken);
+            }
+            resolve(true);
+        } catch (error) {
+            console.log(error);
+            if(error.message === "Request failed with status code 403"){
+                localStorage.removeItem("systemSite");
+            }
+            reject(false);
+        }
+    }) 
+}
+
 export const userLogout = () => {
     return new Promise( async (resolve, reject) => {
         try {
@@ -50,7 +72,6 @@ export const userLogout = () => {
             if(res.status !== 204){
                 reject("No se ha podido realizar el cierre de sesión");
             }
-            sessionStorage.removeItem("accessJWT");
             resolve(res);
         } catch (error) {
             reject(error.message);
