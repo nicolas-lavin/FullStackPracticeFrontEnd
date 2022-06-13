@@ -50,7 +50,7 @@ export const getNewAccessJWT = () => {
             resolve(true);
         } catch (error) {
             console.log(error);
-            if(error.message === "Request failed with status code 403"){
+            if(error.response.status === 403){
                 localStorage.removeItem("systemSite");
             }
             reject(false);
@@ -62,11 +62,12 @@ export const userLogout = () => {
     return new Promise( async (resolve, reject) => {
         try {
             const accessJWT = sessionStorage.getItem("accessJWT");
-            const refreshToken = localStorage.getItem("systemSite");
+            if(!localStorage.getItem("systemSite")) return reject("Usuario sin refresh token");
+            const { refreshJWT } = JSON.parse(localStorage.getItem("systemSite"));
             const res = await axios.delete(AUTH_URL+'/logout', {
                 headers: {
                     Authorization: `Bearer ${accessJWT}`,
-                    'x-auth-token': refreshToken
+                    'x-auth-token': refreshJWT
                 }
             });
             if(res.status !== 204){
@@ -74,6 +75,7 @@ export const userLogout = () => {
             }
             resolve(res);
         } catch (error) {
+            console.log(error);
             reject(error.message);
         }
     })

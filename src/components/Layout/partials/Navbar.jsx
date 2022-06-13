@@ -7,10 +7,10 @@ import { Link, NavLink,useNavigate } from 'react-router-dom';
 import { userLogout } from '../../../services/authService';
 
 const pages = [
-    {name: 'Inicio', to: '/dashboard'}, 
-    {name: 'Ingreso Registro', to:'/registration/create'}, 
-    {name: 'Registros', to:'/registrations'},
-    {name: 'Administrar Personas', to:'/people'}
+    {name: 'Inicio', to: '/app/dashboard'}, 
+    {name: 'Ingreso Registro', to:'/app/registration/create'}, 
+    {name: 'Registros', to:'/app/registrations'},
+    {name: 'Administrar Personas', to:'/app/people'}
 ];
 
 export default function Navbar() {
@@ -34,9 +34,9 @@ export default function Navbar() {
     };
 
     const handleLogout = () => {
+        userLogout();
         sessionStorage.removeItem("accessJWT");
         localStorage.removeItem("systemSite");
-        userLogout();
         navigate("/login/sign-in");
     }
 

@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { loginSuccess } from '../../redux/slices/loginSlice.js'
 import { getNewAccessJWT } from '../../services/authService.js';
 
-export const PrivateRoute = ({ children })  => {
+export const PrivateRoute = ()  => {
     const { isAuth } = useSelector(state => state.login);
     const dispatch = useDispatch(); 
 
@@ -13,9 +13,9 @@ export const PrivateRoute = ({ children })  => {
             const result = await getNewAccessJWT();
             result && dispatch(loginSuccess());
         }
-        updateAccessJWT();
-        sessionStorage.getItem("accessJWT") && dispatch(loginSuccess());
-    },[dispatch])
+        !sessionStorage.getItem("accessJWT") && localStorage.getItem("crmSite") && updateAccessJWT();
+        !isAuth && sessionStorage.getItem("accessJWT") && dispatch(loginSuccess());
+    },[dispatch, isAuth])
 
-    return ( isAuth ? children : <Navigate to="/login/sign-in" replace />)
+    return isAuth ? <Outlet/> : <Navigate to="/login/sign-in" replace />
 }

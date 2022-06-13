@@ -1,12 +1,10 @@
 import { Box, Button, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import AddBox from '@mui/icons-material/AddBox';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { grey } from '@mui/material/colors';
 import { Delete, Edit } from '@mui/icons-material';
-
-const URI = process.env.REACT_APP_URI_BACKEND;
+import { getAllPersons } from '../../services/personService';
 
 export default function ListPeople() {
 
@@ -17,8 +15,8 @@ export default function ListPeople() {
     },[]);
 
     const getPeople = async () => {
-        const res = await axios.get(URI+'/person');
-        setPeople(res.data);
+        const data = await getAllPersons();
+        setPeople(data);
     }
 
     return (
@@ -26,7 +24,7 @@ export default function ListPeople() {
             <Container maxWidth="xl" sx={{py:2, backgroundColor: grey[300]}}>
                 <Grid container>
                     <Grid container item xs={12} pb={2} alignItems="flex-end" justifyContent="flex-end">
-                        <Button variant="contained" size="large" startIcon={<AddBox />} component={Link} to="/people/create">Agregar Persona</Button>
+                        <Button variant="contained" size="large" startIcon={<AddBox />} component={Link} to="/app/people/create">Agregar Persona</Button>
                     </Grid>
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table">
@@ -52,7 +50,7 @@ export default function ListPeople() {
                                     <TableCell>
                                         <Grid container>
                                             <Grid item xs={12} sm={12} md={6}>
-                                                <Button component={Link} to={`/people/edit/${person.id}`} variant="contained" size="sm" color="warning"><Edit/></Button>
+                                                <Button component={Link} to={`/app/people/edit/${person.id}`} variant="contained" size="sm" color="warning"><Edit/></Button>
                                             </Grid>
                                             <Grid item xs={12} sm={12} md={6}>
                                                 <Button variant="contained" size="sm" color="error"><Delete/></Button>

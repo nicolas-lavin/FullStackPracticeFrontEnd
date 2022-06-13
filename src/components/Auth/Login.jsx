@@ -21,7 +21,7 @@ export default function Login() {
   const { isLoading, isAuth, error } = useSelector(state => state.login);
   
   useEffect(() => {
-     sessionStorage.getItem("accessJWT") && navigate("/dashboard")
+     sessionStorage.getItem("accessJWT") && navigate("/app/dashboard")
   },[isAuth, navigate])
 
   const formik = useFormik({
@@ -37,7 +37,7 @@ export default function Login() {
         if (data){
           dispatch(loginSuccess());
           dispatch(getUserProfile());
-          navigate('/dashboard');
+          navigate('/app/dashboard');
         } 
       } catch (error) {
         dispatch(loginFail(error.response.data.message));

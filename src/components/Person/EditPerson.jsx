@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Button, Container, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Container, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { Send } from '@mui/icons-material';
 import { grey, lightBlue } from '@mui/material/colors';
 import axios from 'axios';
@@ -7,11 +7,13 @@ import { useParams } from 'react-router-dom';
 import { Formik } from 'formik';
 import formPersonValidations from './validations/FormPerson';
 import {formatterRut} from '../../libs/chileanRutValidations';
+import { updatePerson } from '../../services/personService';
 
 export default function EditPerson() {
 
     const { id } = useParams();
     const [initValues, setInitValues] = useState({});
+    const [initAlert, setAlert] = useState({});
     const [typesPeople, setTypesPeople] = useState([]);
 
     useEffect(() => {
@@ -35,18 +37,16 @@ export default function EditPerson() {
         });
     }
 
+    const handleCloseAlert = () => setAlert({});
+
     return (
         <>
             <Formik
                 initialValues={initValues}
                 validationSchema={formPersonValidations}
                 onSubmit={async (formData) => {
-                    await axios.put(process.env.REACT_APP_URI_BACKEND+'/person/'+id,formData)
-                    .then((response) =>{
-                        alert(response.data.message);
-                    }).catch((error) =>{
-                        alert(error.response.data.message);
-                    });
+                    const res = await updatePerson(id, formData);
+                    setAlert({severity: res.status, menssage: res.message});
                 }}
                 enableReinitialize={true}
             >
@@ -58,7 +58,12 @@ export default function EditPerson() {
                         autoComplete="off"
                         onSubmit={handleSubmit}
                     >
-                        <Container maxWidth="sm" sx={{ bgcolor: grey[200] }}>
+                        <Container maxWidth="sm" disableGutters={true}>
+                            <Grid item pb={2}>
+                                {initAlert.menssage && <Alert onClose={handleCloseAlert} severity={initAlert.severity}>{initAlert.menssage}</Alert>}
+                            </Grid>
+                        </Container>
+                        <Container maxWidth="sm" sx={{ bgcolor: grey[200] }}> 
                             <Grid container>
                                 <Grid container item xs={12} pt={2} alignItems="center" justifyContent="center">
                                     <Typography variant="h5" gutterBottom component="div" sx={{ color: lightBlue[900] }}>
