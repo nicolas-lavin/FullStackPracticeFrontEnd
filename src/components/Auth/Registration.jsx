@@ -4,12 +4,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { NavLink } from 'react-router-dom';
 import { useFormik } from 'formik';
+import registrationValidations from './validations/Registration';
 
 const theme = createTheme();
 
 export default function Registration() {
   const formik = useFormik({
-    initialValues: { userName: '', firstName: '', lastName: '', password: '', secondPassword: ''},
+    initialValues: { userName: '', firstName: '', lastName: '', email: '',password: '', secondPassword: ''},
+    validationSchema: registrationValidations,
     onSubmit: async (formData) => {
       console.log(formData);
       // axios
