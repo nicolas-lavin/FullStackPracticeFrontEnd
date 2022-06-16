@@ -5,10 +5,12 @@ import { Link } from 'react-router-dom';
 import { grey } from '@mui/material/colors';
 import { Delete, Edit } from '@mui/icons-material';
 import { getAllPersons } from '../../services/personService';
+import ConfirmAlert from '../Material-UI/ConfirmAlert.jsx';
 
 export default function ListPeople() {
-
     const [people, setPeople] = useState([]);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     useEffect( () => {
         getPeople()
@@ -17,6 +19,14 @@ export default function ListPeople() {
     const getPeople = async () => {
         const data = await getAllPersons();
         setPeople(data);
+    }
+
+    const deletePerson = async (deleteId) => {
+        try {
+            
+        } catch (error) {
+                   
+        }
     }
 
     return (
@@ -53,7 +63,7 @@ export default function ListPeople() {
                                                 <Button component={Link} to={`/app/people/edit/${person.id}`} variant="contained" size="sm" color="warning"><Edit/></Button>
                                             </Grid>
                                             <Grid item xs={12} sm={12} md={6}>
-                                                <Button variant="contained" size="sm" color="error"><Delete/></Button>
+                                                <Button variant="contained" size="sm" color="error" onClick={() => {setConfirmOpen(true); setDeleteId(person.id)}}><Delete/></Button>
                                             </Grid>
                                         </Grid>   
                                     </TableCell>
@@ -64,6 +74,14 @@ export default function ListPeople() {
                     </TableContainer>
                 </Grid>
             </Container>
+            <ConfirmAlert 
+                title="¿Está seguro que desea eliminar esta persona?"
+                open={confirmOpen}
+                setOpen={setConfirmOpen}
+                onConfirm={deletePerson(deleteId)}
+            >
+                La persona será completamente eliminada del sistema y sus registros no podrán volver a ser consultados
+            </ConfirmAlert>
         </Box>
     )
 }

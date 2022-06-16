@@ -8,7 +8,7 @@ export const getAllPersons = () => {
             const res = await axios.get(AUTH_URL+'/person');
             resolve(res.data);
         } catch (error) {
-            reject(error.message);
+            reject(error);
         }
     })
 }
@@ -35,6 +35,17 @@ export const storePerson = (formData) => {
     return new Promise(async (resolve, reject) => {
         try {
             const res = await axios.post(AUTH_URL+'/person',formData);
+            resolve(res.data.message);
+        } catch (error) {
+            reject(error.response.data.message);
+        }
+    })
+}
+
+export const deletePerson = (idPerson) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const res = await axios.delete(AUTH_URL+'/person/'+idPerson);
             resolve(res.data.message);
         } catch (error) {
             reject(error.response.data.message);
